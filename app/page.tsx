@@ -96,14 +96,17 @@ export default function Home() {
 
         setResult(response.data)
       } catch (err: any) {
+        console.error('Disease prediction error:', err)
         if (err.response?.status === 500) {
           setError('Server error. Please try again later.')
+        } else if (err.response?.data?.error) {
+          setError(`Error: ${err.response.data.error}`)
         } else if (err.code === 'ECONNABORTED') {
           setError('Request timeout. The audio file might be too large.')
         } else if (err.response?.status === 400) {
           setError('Invalid audio file. Please upload a valid audio file.')
         } else {
-          setError('Failed to process audio file. Please check your connection and try again.')
+          setError(`Failed to process audio file: ${err.message}`)
         }
       } finally {
         setIsUploading(false)
@@ -131,10 +134,15 @@ export default function Home() {
 
         setResult(response.data)
       } catch (err: any) {
+        console.error('Annotation error:', err)
         if (err.response?.status === 500) {
           setError('Server error. Please try again later.')
+        } else if (err.response?.data?.error) {
+          setError(`Error: ${err.response.data.error}`)
+        } else if (err.code === 'ECONNABORTED') {
+          setError('Request timeout. Please try again.')
         } else {
-          setError('Failed to process annotation data. Please try again.')
+          setError(`Failed to process annotation data: ${err.message}`)
         }
       } finally {
         setIsUploading(false)
