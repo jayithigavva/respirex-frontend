@@ -11,7 +11,7 @@ import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://my-backend.onrender.com'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://respirex-backend.onrender.com'
 
 interface DiseasePredictionResult {
   success: boolean
@@ -56,6 +56,12 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState('home')
   const [openFaq, setOpenFaq] = useState<number | null>(null)
   const audioRef = useRef<HTMLAudioElement>(null)
+  
+  // Annotation Model states
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordStartTime, setRecordStartTime] = useState<number | null>(null)
+  const [annotationEvents, setAnnotationEvents] = useState<Array<{type: string, timestamp: number, duration: number}>>([])
+  const [recordingDuration, setRecordingDuration] = useState(0)
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -71,37 +77,105 @@ export default function Home() {
   })
 
   const handleUpload = async () => {
-    if (!file) return
+    if (selectedModel === 'disease') {
+      if (!file) return
 
-    setIsUploading(true)
-    setError(null)
+      setIsUploading(true)
+      setError(null)
 
-    const formData = new FormData()
-    formData.append('file', file)
+      const formData = new FormData()
+      formData.append('file', file)
 
-    try {
-      const endpoint = selectedModel === 'disease' ? '/predict_disease' : '/predict_annotation'
-      const response = await axios.post(`${API_BASE_URL}${endpoint}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-        timeout: 30000,
-      })
+      try {
+        const response = await axios.post(`${API_BASE_URL}/predict_disease`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          timeout: 30000,
+        })
 
-      setResult(response.data)
-    } catch (err: any) {
-      if (err.response?.status === 500) {
-        setError('Server error. Please try again later.')
-      } else if (err.code === 'ECONNABORTED') {
-        setError('Request timeout. The audio file might be too large.')
-      } else if (err.response?.status === 400) {
-        setError('Invalid audio file. Please upload a valid audio file.')
-      } else {
-        setError('Failed to process audio file. Please check your connection and try again.')
+        setResult(response.data)
+      } catch (err: any) {
+        if (err.response?.status === 500) {
+          setError('Server error. Please try again later.')
+        } else if (err.code === 'ECONNABORTED') {
+          setError('Request timeout. The audio file might be too large.')
+        } else if (err.response?.status === 400) {
+          setError('Invalid audio file. Please upload a valid audio file.')
+        } else {
+          setError('Failed to process audio file. Please check your connection and try again.')
+        }
+      } finally {
+        setIsUploading(false)
       }
-    } finally {
-      setIsUploading(false)
+    } else {
+      // Annotation model - send button press data
+      if (annotationEvents.length === 0) {
+        setError('Please record some crackles or wheezes first.')
+        return
+      }
+
+      setIsUploading(true)
+      setError(null)
+
+      try {
+        const response = await axios.post(`${API_BASE_URL}/predict_annotation`, {
+          events: annotationEvents,
+          duration: recordingDuration
+        }, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          timeout: 30000,
+        })
+
+        setResult(response.data)
+      } catch (err: any) {
+        if (err.response?.status === 500) {
+          setError('Server error. Please try again later.')
+        } else {
+          setError('Failed to process annotation data. Please try again.')
+        }
+      } finally {
+        setIsUploading(false)
+      }
     }
+  }
+
+  // Annotation functions
+  const startRecording = () => {
+    setIsRecording(true)
+    setRecordStartTime(Date.now())
+    setAnnotationEvents([])
+    setRecordingDuration(0)
+    setError(null)
+    setResult(null)
+  }
+
+  const stopRecording = () => {
+    setIsRecording(false)
+    if (recordStartTime) {
+      setRecordingDuration((Date.now() - recordStartTime) / 1000)
+    }
+    setRecordStartTime(null)
+  }
+
+  const addCrackle = () => {
+    if (!isRecording) return
+    const timestamp = recordStartTime ? (Date.now() - recordStartTime) / 1000 : 0
+    setAnnotationEvents([...annotationEvents, { type: 'crackle', timestamp, duration: 0.5 }])
+  }
+
+  const addWheeze = () => {
+    if (!isRecording) return
+    const timestamp = recordStartTime ? (Date.now() - recordStartTime) / 1000 : 0
+    setAnnotationEvents([...annotationEvents, { type: 'wheeze', timestamp, duration: 1.0 }])
+  }
+
+  const clearAnnotations = () => {
+    setAnnotationEvents([])
+    setRecordingDuration(0)
+    setResult(null)
   }
 
   const togglePlayPause = () => {
@@ -501,30 +575,117 @@ export default function Home() {
                   </select>
                 </div>
                 
-                {/* Dropzone */}
-                <div
-                  {...getRootProps()}
-                  className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
-                    isDragActive
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-                  }`}
-                >
-                  <input {...getInputProps()} />
-                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                  {isDragActive ? (
-                    <p className="text-blue-600 font-medium">Drop the audio file here...</p>
-                  ) : (
-                    <div>
-                      <p className="text-gray-600 mb-2">
-                        Drag & drop an audio file here, or click to select
+                {/* Model-specific Interface */}
+                {selectedModel === 'disease' ? (
+                  /* Disease Model - Audio Upload */
+                  <div
+                    {...getRootProps()}
+                    className={`border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors ${
+                      isDragActive
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+                    }`}
+                  >
+                    <input {...getInputProps()} />
+                    <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                    {isDragActive ? (
+                      <p className="text-blue-600 font-medium">Drop the audio file here...</p>
+                    ) : (
+                      <div>
+                        <p className="text-gray-600 mb-2">
+                          Drag & drop an audio file here, or click to select
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Supports WAV, MP3, M4A, FLAC formats
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  /* Annotation Model - Button Press Interface */
+                  <div className="space-y-4">
+                    <div className="text-center p-6 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border-2 border-orange-200">
+                      <Stethoscope className="w-12 h-12 text-orange-500 mx-auto mb-4" />
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">Doctor-Assisted Annotation</h4>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Listen to audio and press buttons when you hear crackles or wheezes
                       </p>
-                      <p className="text-sm text-gray-500">
-                        Supports WAV, MP3, M4A, FLAC formats
-                      </p>
+                      
+                      {/* Recording Controls */}
+                      <div className="space-y-3">
+                        {!isRecording ? (
+                          <button
+                            onClick={startRecording}
+                            className="w-full py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition-colors flex items-center justify-center space-x-2"
+                          >
+                            <Play className="w-4 h-4" />
+                            <span>Start Recording</span>
+                          </button>
+                        ) : (
+                          <button
+                            onClick={stopRecording}
+                            className="w-full py-3 bg-red-600 text-white rounded-lg font-semibold hover:bg-red-700 transition-colors flex items-center justify-center space-x-2"
+                          >
+                            <Pause className="w-4 h-4" />
+                            <span>Stop Recording</span>
+                          </button>
+                        )}
+                        
+                        {/* Event Buttons */}
+                        {isRecording && (
+                          <div className="grid grid-cols-2 gap-3">
+                            <button
+                              onClick={addCrackle}
+                              className="py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                            >
+                              Crackle
+                            </button>
+                            <button
+                              onClick={addWheeze}
+                              className="py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+                            >
+                              Wheeze
+                            </button>
+                          </div>
+                        )}
+                        
+                        {/* Clear Button */}
+                        {annotationEvents.length > 0 && (
+                          <button
+                            onClick={clearAnnotations}
+                            className="w-full py-2 bg-gray-500 text-white rounded-lg font-medium hover:bg-gray-600 transition-colors"
+                          >
+                            Clear All
+                          </button>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </div>
+                    
+                    {/* Events List */}
+                    {annotationEvents.length > 0 && (
+                      <div className="bg-gray-50 rounded-lg p-4">
+                        <h5 className="font-semibold text-gray-900 mb-2">Recorded Events:</h5>
+                        <div className="space-y-2 max-h-32 overflow-y-auto">
+                          {annotationEvents.map((event, index) => (
+                            <div key={index} className="flex items-center justify-between text-sm">
+                              <span className={`px-2 py-1 rounded text-white ${
+                                event.type === 'crackle' ? 'bg-blue-500' : 'bg-purple-500'
+                              }`}>
+                                {event.type}
+                              </span>
+                              <span className="text-gray-600">
+                                {event.timestamp.toFixed(1)}s
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                        <div className="mt-2 text-sm text-gray-600">
+                          Total: {annotationEvents.length} events
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Selected File */}
                 {file && (
@@ -556,7 +717,7 @@ export default function Home() {
                 {/* Upload Button */}
                 <button
                   onClick={handleUpload}
-                  disabled={!file || isUploading}
+                  disabled={(selectedModel === 'disease' && !file) || (selectedModel === 'annotation' && annotationEvents.length === 0) || isUploading}
                   className="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 hover:shadow-lg transition-all duration-300"
                 >
                   {isUploading ? (
@@ -567,7 +728,7 @@ export default function Home() {
                   ) : (
                     <>
                       <Upload className="w-4 h-4" />
-                      <span>Analyze Audio</span>
+                      <span>{selectedModel === 'disease' ? 'Analyze Audio' : 'Analyze Annotations'}</span>
                     </>
                   )}
                 </button>
