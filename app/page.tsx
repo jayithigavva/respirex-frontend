@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Upload, FileAudio, AlertCircle, CheckCircle, Loader2, Play, Pause, 
   Heart, Shield, Zap, Users, ChevronDown, ChevronUp, Menu, X,
-  Stethoscope, Brain, Target, Clock, Award, HelpCircle, Warning
+  Stethoscope, Brain, Target, Clock, Award, HelpCircle, AlertTriangle
 } from 'lucide-react'
 import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
@@ -865,7 +865,7 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Warning */}
+          {/* AlertTriangle */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -874,7 +874,7 @@ export default function Home() {
             className="mt-12 p-6 bg-yellow-50 border-l-4 border-yellow-400 rounded-lg"
           >
             <div className="flex items-start space-x-3">
-              <Warning className="w-6 h-6 text-yellow-600 mt-0.5" />
+              <AlertTriangle className="w-6 h-6 text-yellow-600 mt-0.5" />
               <div>
                 <h3 className="font-semibold text-yellow-800 mb-2">Important Medical Disclaimer</h3>
                 <p className="text-yellow-700">
