@@ -261,13 +261,13 @@ export default function Home() {
 
   const teamMembers = [
     {
-      name: "Dr. Sarah Johnson",
+      name: "Aashi Goyal",
       role: "Lead AI Researcher",
       image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
       bio: "PhD in Machine Learning with 10+ years in medical AI research. Specializes in respiratory disease detection algorithms."
     },
     {
-      name: "Dr. Michael Chen",
+      name: "Jayithi Gavva",
       role: "Medical Director",
       image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face",
       bio: "Board-certified pulmonologist with expertise in respiratory diagnostics. Leads clinical validation and medical accuracy."
@@ -1136,7 +1136,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Respirex. All rights reserved. | Medical AI Research Platform</p>
+            <p>&copy; 2025 Respirex. All rights reserved. | Medical AI Research Platform</p>
           </div>
         </div>
       </footer>
