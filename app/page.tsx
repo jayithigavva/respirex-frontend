@@ -1130,9 +1130,8 @@ export default function Home() {
             <div>
               <h4 className="text-lg font-semibold mb-4">Contact</h4>
               <div className="space-y-2 text-gray-400">
-                <p>Email: info@respirex.ai</p>
-                <p>Phone: +1 (555) 123-4567</p>
-                <p>Address: Medical AI Research Center</p>
+                <p>Email: respirexai@gmail.com</p>
+                <p>Phone: +91 8465968724, +91 99824 62685</p>
               </div>
             </div>
           </div>
