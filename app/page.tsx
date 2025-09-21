@@ -1,4 +1,5 @@
 'use client'
+// Updated: Images moved to public directory for proper Next.js static asset handling
 
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -262,15 +263,15 @@ export default function Home() {
   const teamMembers = [
     {
       name: "Aashi Goyal",
-      role: "Lead AI Researcher",
+      role: "",
       image: "/Aashi_Goyal.jpeg",
-      bio: "PhD in Machine Learning with 10+ years in medical AI research. Specializes in respiratory disease detection algorithms."
+      bio: ""
     },
     {
       name: "Jayithi Gavva",
-      role: "Medical Director",
+      role: "",
       image: "/Jayithi_Gavva.png",
-      bio: "Board-certified pulmonologist with expertise in respiratory diagnostics. Leads clinical validation and medical accuracy."
+      bio: ""
     }
   ]
 
