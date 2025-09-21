@@ -234,12 +234,12 @@ export default function Home() {
 
   const faqs = [
     {
-      question: "What is Respirex?",
-      answer: "Respirex is an AI-powered respiratory disease detection system that analyzes audio recordings of breathing sounds to identify potential respiratory conditions with high accuracy."
+      question: "What is RespireX?",
+      answer: "RespireX is an AI-powered respiratory disease detection system that analyzes audio recordings of breathing sounds to identify potential respiratory conditions with medical-grade precision."
     },
     {
-      question: "How accurate is the diagnosis?",
-      answer: "Our AI models achieve 80.77% accuracy for disease classification and 87.5% accuracy for annotation-based predictions, making them suitable for medical screening applications."
+      question: "How reliable is the diagnosis?",
+      answer: "Our AI models provide medical-grade performance for disease classification and clinical-grade analysis for annotation-based predictions, making them suitable for medical screening applications."
     },
     {
       question: "What audio formats are supported?",
@@ -247,7 +247,7 @@ export default function Home() {
     },
     {
       question: "Is this a replacement for medical diagnosis?",
-      answer: "No, Respirex is designed as a screening tool to assist healthcare professionals. Always consult with qualified medical professionals for final diagnosis and treatment."
+      answer: "No, RespireX is designed as a screening tool to assist healthcare professionals. Always consult with qualified medical professionals for final diagnosis and treatment."
     },
     {
       question: "How long does the analysis take?",
@@ -263,13 +263,13 @@ export default function Home() {
     {
       name: "Aashi Goyal",
       role: "Lead AI Researcher",
-      image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?w=400&h=400&fit=crop&crop=face",
+      image: "/Aashi_Goyal.jpeg",
       bio: "PhD in Machine Learning with 10+ years in medical AI research. Specializes in respiratory disease detection algorithms."
     },
     {
       name: "Jayithi Gavva",
       role: "Medical Director",
-      image: "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?w=400&h=400&fit=crop&crop=face",
+      image: "/Jayithi_Gavva.png",
       bio: "Board-certified pulmonologist with expertise in respiratory diagnostics. Leads clinical validation and medical accuracy."
     }
   ]
@@ -286,10 +286,10 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
             >
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                <Heart className="w-6 h-6 text-white" />
+                <img src="/logo.png" alt="RespireX Logo" className="w-6 h-6" />
               </div>
               <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                Respirex
+                RespireX
               </h1>
             </motion.div>
             
@@ -303,7 +303,7 @@ export default function Home() {
                     activeSection === item ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600'
                   }`}
                 >
-                  {item.replace('-', ' ')}
+                  {item === 'faq' ? 'FAQs' : item === 'how-it-works' ? 'How it works?' : item === 'why-choose' ? 'Why RespireX?' : item.replace('-', ' ')}
                 </button>
               ))}
             </div>
@@ -333,7 +333,7 @@ export default function Home() {
                       onClick={() => scrollToSection(item)}
                       className="capitalize font-medium text-left py-2 text-gray-600 hover:text-blue-600"
                     >
-                      {item.replace('-', ' ')}
+                      {item === 'faq' ? 'FAQs' : item === 'how-it-works' ? 'How it works?' : item === 'why-choose' ? 'Why RespireX?' : item.replace('-', ' ')}
                     </button>
                   ))}
                 </div>
@@ -353,7 +353,7 @@ export default function Home() {
             className="text-center"
           >
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent mb-6">
-              Respirex
+              RespireX
             </h1>
             <p className="text-xl md:text-2xl text-gray-600 mb-4 max-w-3xl mx-auto">
               AI-Powered Respiratory Disease Detection
@@ -372,7 +372,7 @@ export default function Home() {
                 onClick={() => scrollToSection('models')}
                 className="px-8 py-4 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-semibold text-lg hover:shadow-lg transition-all duration-300 hover:scale-105"
               >
-                Try Respirex Now
+                Try RespireX Now
               </button>
               <button
                 onClick={() => scrollToSection('how-it-works')}
@@ -395,7 +395,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why Choose Respirex?</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">Why RespireX?</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Cutting-edge AI technology meets medical expertise to deliver accurate, fast, and reliable respiratory disease detection
             </p>
@@ -410,8 +410,8 @@ export default function Home() {
               },
               {
                 icon: <Target className="w-8 h-8" />,
-                title: "High Accuracy",
-                description: "80.77% accuracy in disease classification with continuous model improvements"
+                title: "Data-Driven Insights",
+                description: "Auscultation projective analysis with objective, data-driven insights replacing subjective assessment"
               },
               {
                 icon: <Clock className="w-8 h-8" />,
@@ -480,8 +480,8 @@ export default function Home() {
               
               <div className="space-y-4 mb-6">
                 <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
-                  <span className="font-medium text-gray-900">Accuracy</span>
-                  <span className="text-2xl font-bold text-green-600">80.77%</span>
+                  <span className="font-medium text-gray-900">Performance</span>
+                  <span className="text-2xl font-bold text-green-600">Medical-Grade</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
                   <span className="font-medium text-gray-900">Diseases Detected</span>
@@ -527,8 +527,8 @@ export default function Home() {
               
               <div className="space-y-4 mb-6">
                 <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg">
-                  <span className="font-medium text-gray-900">Accuracy</span>
-                  <span className="text-2xl font-bold text-green-600">87.5%</span>
+                  <span className="font-medium text-gray-900">Performance</span>
+                  <span className="text-2xl font-bold text-green-600">Clinical-Grade</span>
                 </div>
                 <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg">
                   <span className="font-medium text-gray-900">Events Detected</span>
@@ -578,8 +578,8 @@ export default function Home() {
                     onChange={(e) => setSelectedModel(e.target.value as 'disease' | 'annotation')}
                     className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   >
-                    <option value="disease">Disease Classifier (80.77% accuracy)</option>
-                    <option value="annotation">Annotation Model (87.5% accuracy)</option>
+                    <option value="disease">Disease Classifier (Medical-Grade)</option>
+                    <option value="annotation">Annotation Model (Clinical-Grade)</option>
                   </select>
                 </div>
                 
@@ -924,7 +924,7 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">How Respirex Works</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">How it works?</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
               Our AI-powered system uses advanced machine learning to analyze respiratory sounds and provide accurate diagnoses
             </p>
@@ -947,7 +947,7 @@ export default function Home() {
               {
                 step: "03",
                 title: "Disease Detection",
-                description: "Advanced algorithms classify respiratory conditions with high accuracy",
+                description: "Advanced algorithms classify respiratory conditions with medical-grade precision",
                 icon: <Target className="w-8 h-8" />
               },
               {
@@ -989,9 +989,9 @@ export default function Home() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">FAQs</h2>
             <p className="text-xl text-gray-600">
-              Everything you need to know about Respirex
+              Everything you need to know about RespireX
             </p>
           </motion.div>
 
@@ -1047,7 +1047,7 @@ export default function Home() {
               <div>
                 <h3 className="font-semibold text-yellow-800 mb-2">Important Medical Disclaimer</h3>
                 <p className="text-yellow-700">
-                  Respirex is designed as a screening tool to assist healthcare professionals and should not be used as a substitute for professional medical diagnosis, treatment, or advice. Always consult with qualified medical professionals for proper diagnosis and treatment of respiratory conditions.
+                  RespireX is designed as a screening tool to assist healthcare professionals and should not be used as a substitute for professional medical diagnosis, treatment, or advice. Always consult with qualified medical professionals for proper diagnosis and treatment of respiratory conditions.
                 </p>
               </div>
             </div>
@@ -1067,7 +1067,7 @@ export default function Home() {
           >
             <h2 className="text-4xl font-bold text-gray-900 mb-4">Our Team</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Meet the experts behind Respirex - combining AI innovation with medical expertise
+              Meet the experts behind RespireX - combining AI innovation with medical expertise
             </p>
           </motion.div>
 
@@ -1104,9 +1104,9 @@ export default function Home() {
             <div>
               <div className="flex items-center space-x-3 mb-4">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center">
-                  <Heart className="w-6 h-6 text-white" />
+                  <img src="/logo.png" alt="RespireX Logo" className="w-6 h-6" />
                 </div>
-                <h3 className="text-2xl font-bold">Respirex</h3>
+                <h3 className="text-2xl font-bold">RespireX</h3>
               </div>
               <p className="text-gray-400">
                 AI-powered respiratory disease detection for better healthcare outcomes.
@@ -1121,7 +1121,7 @@ export default function Home() {
                     onClick={() => scrollToSection(item)}
                     className="block text-gray-400 hover:text-white transition-colors capitalize"
                   >
-                    {item.replace('-', ' ')}
+                    {item === 'faq' ? 'FAQs' : item === 'how-it-works' ? 'How it works?' : item === 'why-choose' ? 'Why RespireX?' : item.replace('-', ' ')}
                   </button>
                 ))}
               </div>
@@ -1136,7 +1136,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-            <p>&copy; 2025 Respirex. All rights reserved. | Medical AI Research Platform</p>
+            <p>&copy; 2025 RespireX. All rights reserved. | Medical AI Research Platform</p>
           </div>
         </div>
       </footer>
