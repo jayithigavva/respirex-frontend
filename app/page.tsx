@@ -12,7 +12,7 @@ import { useDropzone } from 'react-dropzone'
 import axios from 'axios'
 
 // API Configuration
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://respirex-api-v21.onrender.com'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://respirex-api-v22.onrender.com'
 
 interface DiseasePredictionResult {
   success: boolean
